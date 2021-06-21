@@ -18,6 +18,30 @@ struct Game: GameCompatible {
 extension Game {
 
     func defineFirstAttackingPlayer(players: [Player]) -> Player? {
-        nil
+        if players.count < 2 {
+            return nil
+        }
+        var firstAttackingPlayer = Player()
+        var currentMinTrumpIndex = Value.allCases.count
+        var someoneHaveTrump = false
+        for player in players {
+            for i in 0..<6 {
+                if player.hand?[i].isTrump == true {
+                    someoneHaveTrump = true
+                    guard let indexTrumpCardOnHand = player.hand?[i].value.rawValue
+                    else {return nil}
+                    if indexTrumpCardOnHand < currentMinTrumpIndex {
+                        currentMinTrumpIndex = indexTrumpCardOnHand
+                        firstAttackingPlayer = player
+                    }
+                }
+            }
+        }
+        if someoneHaveTrump != true {
+            print("no one player has a trump card")
+            return nil
+        }
+        
+        return firstAttackingPlayer
     }
 }
